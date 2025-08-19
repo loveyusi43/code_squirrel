@@ -1,4 +1,4 @@
-// 版本2
+// 版本3
 
 #include <chrono>
 #include <filesystem>
@@ -7,7 +7,6 @@
 
 #ifdef _WIN32
 #include <shlobj.h>
-#include <windows.h>
 #else
 #include <pwd.h>
 #include <unistd.h>
@@ -54,8 +53,6 @@ int main() {
     std::int64_t base_time = std::chrono::duration_cast<std::chrono::milliseconds>(start.time_since_epoch()).count();
     int count = 0;  // 记录移动的文件数量
 
-    //std::chrono::time_point start = std::chrono::steady_clock::now();  // 记录程序运行时间
-
     std::filesystem::path root = ".";  // 递归搜素起点
     for (std::filesystem::recursive_directory_iterator it = std::filesystem::recursive_directory_iterator(root, std::filesystem::directory_options::skip_permission_denied);
         it != std::filesystem::recursive_directory_iterator(); ++it) { // 开始循环
@@ -64,6 +61,7 @@ int main() {
             continue;
             ;
         }
+        //std::filesystem::directory_entry
         if (!it->is_regular_file()) {
             continue;
         }
@@ -71,9 +69,6 @@ int main() {
         // 开始处理文件
         std::string extension_str = it->path().extension().string();
         if (extensions.find(extension_str) != extensions.end()) { // 找到符合后缀需求的文件
-            //std::chrono::time_point now_ = std::chrono::system_clock::now();
-            //std::int64_t base_time = std::chrono::duration_cast<std::chrono::milliseconds>(now_.time_since_epoch()).count();
-            
             std::string stem = it->path().stem().string();
             // 根据时间戳和原文件名创建新文件名
             std::string new_name = std::to_string(base_time) + '_' + stem + extension_str;
