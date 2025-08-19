@@ -40,11 +40,13 @@ int main() {
         std::chrono::floor<std::chrono::seconds>(now);
     std::string month_abbr = std::format("{:%B}", time);
     std::transform(month_abbr.begin(), month_abbr.end(), month_abbr.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
 
     std::filesystem::path root = ".";  // 递归搜素起点
     // 移动到
     std::filesystem::path target_dir = GetHomeDirectory() / "repositories" / "bug_forge" / month_abbr;
+    
+    std::cout << "目标路径：" << target_dir << std::endl;
 
     std::filesystem::create_directories(target_dir);
 
@@ -65,8 +67,8 @@ int main() {
 
         std::string ext = it->path().extension().string();
         if (extensions.find(ext) != extensions.end()) {
-            std::chrono::time_point now = std::chrono::system_clock::now();
-            std::int64_t base_time = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+            std::chrono::time_point now_ = std::chrono::system_clock::now();
+            std::int64_t base_time = std::chrono::duration_cast<std::chrono::milliseconds>(now_.time_since_epoch()).count();
             std::string stem = it->path().stem().string();
             std::string new_name = std::to_string(base_time) + '_' + stem + ext;
 
@@ -77,6 +79,6 @@ int main() {
         }
     }
     auto end = std::chrono::steady_clock::now();
-    ino64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::int64_t dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     std::cout << std::format("本次共存档: {} 个文件, 耗时: {}ms", count, dt) << std::endl;
 }
