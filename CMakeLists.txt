@@ -5,3 +5,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(squirrel main.cc)
+
+target_compile_options(squirrel PRIVATE -Wall -Wextra -Wpedantic -Werror)
