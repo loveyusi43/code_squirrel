@@ -6,7 +6,6 @@
 #ifdef _WIN32
 #include <shlobj.h>
 #include <windows.h>
-
 #else
 #include <pwd.h>
 #include <unistd.h>
